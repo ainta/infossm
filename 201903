@@ -1,1 +1,31 @@
-Hello, world!
+---
+layout: post
+title:  "Perfect Elimination Ordering in Chordal Graph"
+date:   2019-03-10 23:30:00
+author: ainta
+tags: [algorithm, graph]
+---
+
+# 목차
+
+- [1. 개요](#개요)
+- [2. 기본](#기본)
+- [3. 구현](#구현)
+- [4. 문제풀이](#문제풀이)
+- [5. 마무리](#마무리)
+- [6. 참고자료](#참고자료)
+
+# 개요
+
+## Chordal Graph
+ Chordal Graph란, 길이 4 이상의 모든 simple cycle이 chord를 포함하는 그래프를 말한다. 여기서 chord란 cycle에 포함되는 edge는 아니지만 cycle에 포함하는 두 vertex를 잇는 edge를 뜻한다. 즉, 어떤 4개 이상의 vertex를 고르더라도 그 vertex들로 이뤄진 induced subgraph가 simple cycle이 되지 않는 그래프이다. 
+
+## Perfect Elimination Ordering
+
+그래프 $$G = (V, E)$$의 ordering $$X$$가 모든 vertex $$v$$에 대해, $$v$$와 인접한 정점들 중 $$X$$에서 $$v$$보다 늦게 등장하는 정점들이 clique(완전그래프)를 이루는 ordering이라면 $$X$$를 $$G$$의 perfect elimination ordering이라고 한다. 그래프 $$G$$에 chord를 가지지 않는 길이 4 이상의 cycle이 존재한다면 cycle에 포함되는 vertex 중 처음으로 등장하는 vertex는 perfect elimination ordering의 조건을 만족할 수 없으므로 는 perfect elimination ordering이 존재하지 않는다. 또한, 모든 chordal graph에 대해 perfect elimination ordering이 존재함이 알려져 있다(이에 대한 증명과 perfect elimination ordering을 직접 찾는 방법을 이후에 알아볼 것이다). 즉, 그래프 $$G$$의 perfect elimination ordering이 존재함과 $$G$$가 chordal graph임은 동치이다.
+
+## Finding a perfect elimination ordering in a chordal graph
+
+$$G = (V, E)$$의 perfect elimination ordering은 앞에서부터 순서대로 간단하게 구할 수 있다. 어떤 vertex $$v$$가 존재하여 $$v$$와 인접한 vertex들이 clique을 이루면 $$v$$를 ordering의 맨 뒤에 추가하고, $$G$$에서는 제거하는 과정을 반복하면 perfect elimination ordering이 나온다. 만약 모든 vertex가 제거되지 않았는데 조건을 만족하는 vertex $$v$$를 찾을 수 없다면 perfect elimination ordering이 없는 것이므로 chordal graph가 아니라는 사실 역시 판정할 수 있다.
+이를 naive한 방법으로 구현하면  $$O(V^4)$$의 매우 느린 시간복잡도를 갖는 알고리즘이 된다. 이를 개선한 방법으로 다음과 같은 알고리즘을 생각할 수 있다. 각 vertex $$v$$에 대해 아직 제거되지 않은 vertex들 중 $$v$$와 인접한 vertex들의 집합을 $$N(v)$$,  내에서 서로 연결되지 않은 vertex 쌍의 개수를 $$C(v)$$라고 할 때 $$C(v)$$가 0이 되는 정점 을 queue에 넣고, queue의 head에 있는 정점을 제거하는 방식으로 perfect elimination ordering을 구할 수 있다. 정점 $$v$$를 제거할 때 $$v$$와 인접한 정점들의 $$C(v)$$ 값을 업데이트해주어야 한다. 자세한 알고리즘을 의사코드로 표현하면 다음과 같다.
+
